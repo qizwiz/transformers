@@ -30,11 +30,7 @@ from transformers.utils import CHAT_TEMPLATE_FILE
 
 
 class TestChatTemplateKwargOverride(unittest.TestCase):
-    MODEL_TEMPLATE = (
-        "{% for message in messages %}"
-        "{{ message.role }}: {{ message.content }}\n"
-        "{% endfor %}"
-    )
+    MODEL_TEMPLATE = "{% for message in messages %}{{ message.role }}: {{ message.content }}\n{% endfor %}"
 
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
@@ -49,9 +45,7 @@ class TestChatTemplateKwargOverride(unittest.TestCase):
     def test_user_chat_template_preserved_in_returned_kwargs(self):
         """A caller-supplied chat_template must survive get_processor_dict in returned_kwargs."""
         user_template = "{{ messages | tojson }}"
-        _processor_dict, returned_kwargs = ProcessorMixin.get_processor_dict(
-            self.tmpdir, chat_template=user_template
-        )
+        _processor_dict, returned_kwargs = ProcessorMixin.get_processor_dict(self.tmpdir, chat_template=user_template)
         self.assertEqual(
             returned_kwargs.get("chat_template"),
             user_template,
